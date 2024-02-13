@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../firebase/firebase";
 import { toast } from "react-toastify";
 import Link from "next/link";
 
@@ -24,20 +23,6 @@ export default function Page() {
 		if (password.length < 6) {
 			toast.error("Password must be at least 6 characters long.");
 			return;
-		}
-
-		try {
-			const res = await createUserWithEmailAndPassword(auth, email, password);
-
-			if (!res) {
-				toast.error("Invalid credentials.");
-				return;
-			}
-
-			router.push("/dashboard");
-		} catch (error) {
-			toast.error(error as string);
-			console.log(error);
 		}
 	}
 

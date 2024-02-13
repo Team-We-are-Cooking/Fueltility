@@ -6,27 +6,11 @@ import {
 	GoogleAuthProvider,
 	signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "../../../firebase/firebase";
 import { toast } from "react-toastify";
 import Link from "next/link";
 
 export default function Page() {
 	const router = useRouter();
-
-	async function googleSignIn() {
-		try {
-			const res = await signInWithPopup(auth, new GoogleAuthProvider());
-
-			if (!res) {
-				toast.error("Invalid credentials.");
-				return;
-			}
-
-			router.push("/dashboard");
-		} catch (error) {
-			console.error(error);
-		}
-	}
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -40,19 +24,19 @@ export default function Page() {
 			return;
 		}
 
-		try {
-			const res = await signInWithEmailAndPassword(auth, email, password);
+		// try {
+		// 	const res = await signInWithEmailAndPassword(auth, email, password);
 
-			if (!res) {
-				toast.error("Invalid credentials.");
-				return;
-			}
+		// 	if (!res) {
+		// 		toast.error("Invalid credentials.");
+		// 		return;
+		// 	}
 
-			router.push("/dashboard");
-		} catch (error) {
-			toast.error(error as string);
-			console.log(error);
-		}
+		// 	router.push("/dashboard");
+		// } catch (error) {
+		// 	toast.error(error as string);
+		// 	console.log(error);
+		// }
 	}
 
 	return (
@@ -63,10 +47,7 @@ export default function Page() {
 					<p className="text-sm text-neutral-400">Sign in to your account</p>
 				</div>
 
-				<button
-					onClick={googleSignIn}
-					className="flex items-center justify-center bg-grayButton w-full rounded-md border border-grayButtonOutline hover:bg-grayButtonHover py-2 transition-colors"
-				>
+				<button className="flex items-center justify-center bg-grayButton w-full rounded-md border border-grayButtonOutline hover:bg-grayButtonHover py-2 transition-colors">
 					<svg
 						version="1.1"
 						xmlns="http://www.w3.org/2000/svg"

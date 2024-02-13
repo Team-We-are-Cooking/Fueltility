@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Providers from "@/components/providers/Providers";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import { ToastContainer } from "react-toastify";
@@ -22,13 +21,12 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`${inter.className} bg-main text-neutral-200`}>
-				<Providers>
-					<Navbar />
-					<div className="flex flex-col min-h-custom">
-						<div className="flex-grow">{children}</div>
-						<Footer />
-					</div>
-				</Providers>
+				<Navbar />
+				<div className="flex flex-col min-h-custom">
+					<div className="flex-grow">{children}</div>
+					<Footer />
+				</div>
+
 				<ToastContainer autoClose={3000} theme="dark" />
 			</body>
 		</html>

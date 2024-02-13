@@ -3,8 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Datepicker from "react-tailwindcss-datepicker";
-import { addEvent } from "../../../../firebase/firestore";
-import { useAuth } from "../../../../firebase/auth";
 import { useRouter } from "next/navigation";
 import { Timestamp } from "firebase/firestore";
 
@@ -13,7 +11,6 @@ export default function Page() {
 		startDate: null,
 		endDate: null,
 	});
-	const { authUser } = useAuth();
 	const router = useRouter();
 
 	const handleDateChange = (newValue: any) => {
@@ -37,19 +34,6 @@ export default function Page() {
 
 		const date = new Date(eventDate.startDate);
 		const timestamp = Timestamp.fromDate(date);
-
-		if (!authUser) {
-			toast.error("You must be logged in to create an event");
-			router.push("/sign-in");
-			return;
-		}
-
-		try {
-			addEvent(authUser?.uid, timestamp, type, title, company, audience);
-			toast.success("Event created successfully");
-		} catch (error) {
-			toast.error("Error creating event");
-		}
 
 		setEventDate({ startDate: null, endDate: null });
 

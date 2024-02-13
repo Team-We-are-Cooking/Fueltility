@@ -2,18 +2,13 @@
 
 import Link from "next/link";
 import { BoltIcon } from "@heroicons/react/20/solid";
-import { useAuth } from "../../../firebase/auth";
 import { signOut } from "firebase/auth";
-import { auth } from "../../../firebase/firebase";
 import { useRouter } from "next/navigation";
 
 export default function Navigation() {
-	const { authUser, clearCredentials } = useAuth();
 	const router = useRouter();
 
 	async function signOutUser() {
-		await signOut(auth);
-		clearCredentials();
 		router.push("/");
 	}
 
@@ -25,7 +20,14 @@ export default function Navigation() {
 					<p className="font-bold">EchoAI</p>
 				</Link>
 
-				{authUser ? (
+				<Link
+					href="/sign-in"
+					className="py-2 px-4 flex rounded-md no-underline bg-mainButton hover:bg-mainButtonHover text-xs font-medium"
+				>
+					Sign in
+				</Link>
+
+				{/* {authUser ? (
 					<button
 						className="py-2 px-4 flex rounded-md no-underline bg-mainButton hover:bg-mainButtonHover text-xs font-medium"
 						onClick={signOutUser}
@@ -33,13 +35,8 @@ export default function Navigation() {
 						<p className="text-xs font-medium">Sign out</p>
 					</button>
 				) : (
-					<Link
-						href="/sign-in"
-						className="py-2 px-4 flex rounded-md no-underline bg-mainButton hover:bg-mainButtonHover text-xs font-medium"
-					>
-						Sign in
-					</Link>
-				)}
+					
+				)} */}
 			</div>
 		</nav>
 	);
