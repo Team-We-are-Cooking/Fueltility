@@ -1,11 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import {
-	signInWithPopup,
-	GoogleAuthProvider,
-	signInWithEmailAndPassword,
-} from "firebase/auth";
 import { toast } from "react-toastify";
 import Link from "next/link";
 
