@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { toast } from "react-toastify";
 import Link from "next/link";
 
@@ -14,9 +13,10 @@ export default function Page() {
 
 		const email = formData.get("email") as string;
 		const password = formData.get("password") as string;
+		const username = formData.get("username") as string;
 
-		if (!email || !password) {
-			toast.error("Email and password are required");
+		if (!email || !password || !username) {
+			toast.error("All fields are required.");
 			return;
 		}
 
@@ -24,10 +24,12 @@ export default function Page() {
 			toast.error("Password must be at least 6 characters long.");
 			return;
 		}
+
+		router.push("/fuel");
 	}
 
 	return (
-		<div className="flex items-center justify-center py-36">
+		<div className="flex items-center justify-center py-32">
 			<div className="w-full max-w-96">
 				<div className="font-medium mb-8">
 					<p className="text-xl mb-2">Get started</p>
@@ -49,6 +51,25 @@ export default function Page() {
 								id="email"
 								className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 								placeholder="you@example.com"
+								required
+							/>
+						</div>
+					</div>
+
+					<div className="mt-4">
+						<label
+							htmlFor="username"
+							className="block text-sm font-medium leading-6 text-neutral-400"
+						>
+							Username
+						</label>
+						<div className="relative mt-2 rounded-md shadow-sm">
+							<input
+								type="text"
+								name="username"
+								id="username"
+								className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+								placeholder="Username"
 								required
 							/>
 						</div>
