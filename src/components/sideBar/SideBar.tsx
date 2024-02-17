@@ -5,7 +5,7 @@ import {
 	HomeIcon,
 	NewspaperIcon,
 	ClockIcon,
-	UserIcon
+	UserIcon,
 } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 
@@ -24,29 +24,29 @@ export default function SideBar() {
 
 	const navLinks = [
 		{
-			href: "fuel/home",
+			href: "/fuel/home",
 			icon: <HomeIcon className="h-6 w-6 mr-1" />,
 			name: "Home",
 		},
 		{
-			href: "fuel/quote_form",
+			href: "/fuel/quote_form",
 			icon: <NewspaperIcon className="h-6 w-6 mr-1" />,
 			name: "Fuel Quote Form",
 		},
 		{
-			href: "fuel/history",
+			href: "/fuel/history",
 			icon: <ClockIcon className="h-6 w-6 mr-1" />,
 			name: "Fuel Quote History",
 		},
 		{
-			href: "fuel/profile",
+			href: "/fuel/profile",
 			icon: <UserIcon className="h-6 w-6 mr-1" />,
 			name: "Profile Management",
 		},
 	];
 
 	return (
-		<div className="w-52 min-w-52 h-screen">
+		<div className="w-60 min-w-60 min-h-custom">
 			<div className="pr-6 py-6 mt-16 fixed top-0 h-screen w-60 min-w-60 border-r border-r-border">
 				<ul className="flex flex-col gap-3 transition-all text-sm">
 					{navLinks.map((link, index) => {
