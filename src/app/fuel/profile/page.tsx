@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Datepicker from "react-tailwindcss-datepicker";
 import { useRouter } from "next/navigation";
 import { Timestamp } from "firebase/firestore";
+import { states } from "./state";
 
 export default function Page() {
 	const [eventDate, setEventDate] = useState({
@@ -61,7 +61,7 @@ export default function Page() {
 										type="text"
 										name="title"
 										id="title"
-										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 										placeholder="John Doe"
 										required
 									/>
@@ -80,7 +80,7 @@ export default function Page() {
 										type="text"
 										name="type"
 										id="type"
-										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 										placeholder="1234 Richard Rd"
 										required
 									/>
@@ -99,9 +99,8 @@ export default function Page() {
 										type="text"
 										name="type"
 										id="type"
-										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 										placeholder="1234 Richard Rd"
-										required
 									/>
 								</div>
 							</div>
@@ -119,7 +118,7 @@ export default function Page() {
 											type="text"
 											name="company"
 											id="company"
-											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 											placeholder="San Antonio"
 											required
 										/>
@@ -134,14 +133,14 @@ export default function Page() {
 										State
 									</label>
 									<div className="relative mt-2 rounded-md shadow-sm">
-										<input
-											type="text"
-											name="audience"
-											id="audience"
-											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-											placeholder="Recruiter"
-											required
-										/>
+										<select name="state" id="state" className="block w-full h-10 rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors overflow-hidden" required> 
+											<option disabled selected hidden>Select</option>
+											{Object.entries(states).map(([state, st]) => (
+												<option key={state} value={state}>
+													{st}
+												</option>
+											))}
+										</select>
 									</div>
 								</div>
 
@@ -157,8 +156,8 @@ export default function Page() {
 											type="text"
 											name="audience"
 											id="audience"
-											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-											placeholder="Recruiter"
+											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+											placeholder="#####"
 											required
 										/>
 									</div>
