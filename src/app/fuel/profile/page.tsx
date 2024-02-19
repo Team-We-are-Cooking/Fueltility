@@ -44,7 +44,7 @@ export default function Page() {
 
 	return (
 		<div className="text-neutral-200 p-12">
-			<h1 className="text-3xl font-semibold text-neutral-100">Create Event</h1>
+			<h1 className="text-3xl font-semibold text-neutral-100">Profile Management</h1>
 			<form onSubmit={handleSubmit}>
 				<div className="space-y-12">
 					<div className="">
@@ -54,7 +54,7 @@ export default function Page() {
 									htmlFor="title"
 									className="block text-sm font-medium leading-6 text-neutral-400"
 								>
-									Event Title
+									Full Name
 								</label>
 								<div className="relative mt-2 rounded-md shadow-sm">
 									<input
@@ -62,7 +62,7 @@ export default function Page() {
 										name="title"
 										id="title"
 										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-										placeholder="Interview with Company X"
+										placeholder="John Doe"
 										required
 									/>
 								</div>
@@ -73,15 +73,16 @@ export default function Page() {
 									htmlFor="date"
 									className="block text-sm font-medium leading-6 text-neutral-400"
 								>
-									Event Date
+									Address 1
 								</label>
-								<div className="mt-2 max-w-3xl">
-									<Datepicker
-										asSingle={true}
-										inputClassName="bg-inputBG w-full max-w-3xl rounded-md py-1.5 px-3 border border-inputBorder placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors text-neutral-100"
-										value={eventDate}
-										onChange={handleDateChange}
-										popoverDirection="down"
+								<div className="relative mt-2 rounded-md shadow-sm">
+									<input
+										type="text"
+										name="type"
+										id="type"
+										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+										placeholder="1234 Richard Rd"
+										required
 									/>
 								</div>
 							</div>
@@ -91,7 +92,7 @@ export default function Page() {
 									htmlFor="type"
 									className="block text-sm font-medium leading-6 text-neutral-400"
 								>
-									Event Type
+									Address 2
 								</label>
 								<div className="relative mt-2 rounded-md shadow-sm">
 									<input
@@ -99,47 +100,68 @@ export default function Page() {
 										name="type"
 										id="type"
 										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-										placeholder="Interview"
+										placeholder="1234 Richard Rd"
 										required
 									/>
 								</div>
 							</div>
 
-							<div className="max-w-3xl">
-								<label
-									htmlFor="company"
-									className="block text-sm font-medium leading-6 text-neutral-400"
-								>
-									Company
-								</label>
-								<div className="relative mt-2 rounded-md shadow-sm">
-									<input
-										type="text"
-										name="company"
-										id="company"
-										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-										placeholder="Google"
-										required
-									/>
+							<div className="flex max-w-3xl justify-between">
+								<div className="w-80">
+									<label
+										htmlFor="company"
+										className="block text-sm font-medium leading-6 text-neutral-400"
+									>
+										City
+									</label>
+									<div className="relative mt-2 rounded-md shadow-sm">
+										<input
+											type="text"
+											name="company"
+											id="company"
+											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+											placeholder="San Antonio"
+											required
+										/>
+									</div>
 								</div>
-							</div>
 
-							<div className="max-w-3xl">
-								<label
-									htmlFor="audience"
-									className="block text-sm font-medium leading-6 text-neutral-400"
-								>
-									Audience
-								</label>
-								<div className="relative mt-2 rounded-md shadow-sm">
-									<input
-										type="text"
-										name="audience"
-										id="audience"
-										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-										placeholder="Recruiter"
-										required
-									/>
+								<div className="w-48">
+									<label
+										htmlFor="audience"
+										className="block text-sm font-medium leading-6 text-neutral-400"
+									>
+										State
+									</label>
+									<div className="relative mt-2 rounded-md shadow-sm">
+										<input
+											type="text"
+											name="audience"
+											id="audience"
+											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+											placeholder="Recruiter"
+											required
+										/>
+									</div>
+								</div>
+
+								<div className="max-w-3xl">
+									<label
+										htmlFor="audience"
+										className="block text-sm font-medium leading-6 text-neutral-400"
+									>
+										ZIP Code
+									</label>
+									<div className="relative mt-2 rounded-md shadow-sm">
+										<input
+											type="text"
+											name="audience"
+											id="audience"
+											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+											placeholder="Recruiter"
+											required
+										/>
+									</div>
 								</div>
 							</div>
 						</div>

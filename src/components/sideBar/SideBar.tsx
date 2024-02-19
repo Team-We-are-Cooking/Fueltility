@@ -24,7 +24,7 @@ export default function SideBar() {
 
 	const navLinks = [
 		{
-			href: "/fuel/home",
+			href: "/fuel",
 			icon: <HomeIcon className="h-6 w-6 mr-1" />,
 			name: "Home",
 		},
