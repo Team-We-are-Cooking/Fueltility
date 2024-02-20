@@ -39,25 +39,6 @@ export default function Page() {
 				<form onSubmit={handleSubmit}>
 					<div className="mt-4">
 						<label
-							htmlFor="email"
-							className="block text-sm font-medium leading-6 text-neutral-400"
-						>
-							Email
-						</label>
-						<div className="relative mt-2 rounded-md shadow-sm">
-							<input
-								type="text"
-								name="email"
-								id="email"
-								className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-								placeholder="you@example.com"
-								required
-							/>
-						</div>
-					</div>
-
-					<div className="mt-4">
-						<label
 							htmlFor="username"
 							className="block text-sm font-medium leading-6 text-neutral-400"
 						>
@@ -70,6 +51,25 @@ export default function Page() {
 								id="username"
 								className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 								placeholder="Username"
+								required
+							/>
+						</div>
+					</div>
+
+					<div className="mt-4">
+						<label
+							htmlFor="email"
+							className="block text-sm font-medium leading-6 text-neutral-400"
+						>
+							Email
+						</label>
+						<div className="relative mt-2 rounded-md shadow-sm">
+							<input
+								type="text"
+								name="email"
+								id="email"
+								className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+								placeholder="you@example.com"
 								required
 							/>
 						</div>
