@@ -13,11 +13,14 @@ export default function Page() {
 
 		const email = formData.get("email") as string;
 		const password = formData.get("password") as string;
+		const username = formData.get("username") as string;
 
-		if (!email || !password) {
-			toast.error("Email and password are required");
+		if (!email || !password || !username) {
+			toast.error("All fields are required.");
 			return;
 		}
+
+		console.log({ email, password, username });
 
 		router.push("/fuel");
 	}
@@ -31,6 +34,25 @@ export default function Page() {
 				</div>
 
 				<form onSubmit={handleSubmit}>
+					<div className="mt-4">
+						<label
+							htmlFor="username"
+							className="block text-sm font-medium leading-6 text-neutral-400"
+						>
+							Username
+						</label>
+						<div className="relative mt-2 rounded-md shadow-sm">
+							<input
+								type="text"
+								name="username"
+								id="username"
+								className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+								placeholder="Username"
+								required
+							/>
+						</div>
+					</div>
+
 					<div className="mt-4">
 						<label
 							htmlFor="email"
