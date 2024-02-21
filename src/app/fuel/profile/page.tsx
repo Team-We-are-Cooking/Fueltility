@@ -7,38 +7,35 @@ import { Timestamp } from "firebase/firestore";
 import { states } from "./state";
 
 export default function Page() {
-	const [eventDate, setEventDate] = useState({
-		startDate: null,
-		endDate: null,
-	});
 	const router = useRouter();
-
-	const handleDateChange = (newValue: any) => {
-		setEventDate(newValue);
-	};
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
 		const formRef = e.currentTarget as HTMLFormElement;
 		const formData = new FormData(e.currentTarget as HTMLFormElement);
-		const title = formData.get("title") as string;
-		const type = formData.get("type") as string;
-		const company = formData.get("company") as string;
-		const audience = formData.get("audience") as string;
+		const fullName = formData.get("fullName") as string;
+		const address1 = formData.get("address1") as string;
+		const address2 = formData.get("address2") as string;
+		const city = formData.get("city") as string;
+		const state = formData.get("state") as string;
+		const zipcode = formData.get("zipcode") as string;
 
-		if (!type || !company || !audience || !eventDate.startDate || !title) {
+		if (!fullName || !address1 || !city || !state || !zipcode) {
 			toast.error("All fields are required");
 			return;
 		}
 
-		const date = new Date(eventDate.startDate);
-		const timestamp = Timestamp.fromDate(date);
-
-		setEventDate({ startDate: null, endDate: null });
-
 		if (formRef) {
 			formRef.reset();
+		}
+	}
+
+	async function validateName(e: React.ChangeEvent<HTMLInputElement>){
+		e.preventDefault();
+		const name = e.target.value;
+		if (/\d/.test(name)) {
+			toast.error("Name should only have non-numerical characters")
 		}
 	}
 
@@ -59,10 +56,13 @@ export default function Page() {
 								<div className="relative mt-2 rounded-md shadow-sm">
 									<input
 										type="text"
-										name="title"
-										id="title"
+										name="fullName"
+										id="fullName"
 										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-										placeholder="John Doe"
+										placeholder="John Doe" 
+										minLength={1}
+										maxLength={50}
+										onChange={validateName}
 										required
 									/>
 								</div>
@@ -78,11 +78,14 @@ export default function Page() {
 								<div className="relative mt-2 rounded-md shadow-sm">
 									<input
 										type="text"
-										name="type"
-										id="type"
+										name="address1"
+										id="address1"
 										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 										placeholder="1234 Richard Rd"
+										minLength={1} 
+										maxLength={100}
 										required
+										
 									/>
 								</div>
 							</div>
@@ -97,10 +100,12 @@ export default function Page() {
 								<div className="relative mt-2 rounded-md shadow-sm">
 									<input
 										type="text"
-										name="type"
-										id="type"
+										name="address2"
+										id="address2"
 										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-										placeholder="1234 Richard Rd"
+										placeholder="Apartment #1"
+										minLength={1} 
+										maxLength={100}
 									/>
 								</div>
 							</div>
@@ -116,10 +121,12 @@ export default function Page() {
 									<div className="relative mt-2 rounded-md shadow-sm">
 										<input
 											type="text"
-											name="company"
-											id="company"
+											name="city"
+											id="city"
 											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 											placeholder="San Antonio"
+											minLength={1} 
+											maxLength={100}
 											required
 										/>
 									</div>
@@ -133,7 +140,11 @@ export default function Page() {
 										State
 									</label>
 									<div className="relative mt-2 rounded-md shadow-sm">
-										<select name="state" id="state" className="block w-full h-10 rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors overflow-hidden" required> 
+										<select 
+										name="state" 
+										id="state" 
+										className="block w-full h-10 rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors overflow-hidden" 
+										required> 
 											<option disabled selected hidden>Select</option>
 											{Object.entries(states).map(([state, st]) => (
 												<option key={state} value={state}>
@@ -154,10 +165,12 @@ export default function Page() {
 									<div className="relative mt-2 rounded-md shadow-sm">
 										<input
 											type="text"
-											name="audience"
-											id="audience"
+											name="zipcode"
+											id="zipcode"
 											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-											placeholder="#####"
+											placeholder="######"
+											minLength={5} 
+											maxLength={9}
 											required
 										/>
 									</div>
