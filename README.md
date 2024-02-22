@@ -1,3 +1,3 @@
-## System Design 
-
-![System Design Image](https://github.com/BvChung/EchoAI/blob/main/sysdesign/sysdesign.png)
+## Fueltility
+#### By: Brandon Chung, Kevin Zhang, Fernando Ramirez, John Cox
+--- 
