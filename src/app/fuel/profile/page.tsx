@@ -39,6 +39,22 @@ export default function Page() {
 		}
 	}
 
+	async function validateZipcode(e: React.ChangeEvent<HTMLInputElement>) {
+		e.preventDefault();
+		const name = e.target.value;
+		if (!(/^\d+$/.test(name))) {
+			toast.error("Name should only have numerical characters")
+		}
+	}
+
+	async function validateCity(e: React.ChangeEvent<HTMLInputElement>) {
+		e.preventDefault();
+		const name = e.target.value;
+		if (/^\d+$/.test(name)) {
+			toast.error("Name should only have non-numerical characters")
+		}
+	}
+
 	return (
 		<div className="text-neutral-200 p-12">
 			<h1 className="text-3xl font-semibold text-neutral-100">Profile Management</h1>
@@ -127,6 +143,7 @@ export default function Page() {
 											placeholder="San Antonio"
 											minLength={1} 
 											maxLength={100}
+											onChange={validateCity}
 											required
 										/>
 									</div>
@@ -171,6 +188,7 @@ export default function Page() {
 											placeholder="######"
 											minLength={5} 
 											maxLength={9}
+											onChange={validateZipcode}
 											required
 										/>
 									</div>
