@@ -1,3 +1,3 @@
 ## Fueltility
-#### By: Brandon Chung, Kevin Zhang, Fernando Ramirez, John Cox
+#### By: Brandon Chung, Kevin Zheng, Fernando Ramirez, John Cox
 --- 
