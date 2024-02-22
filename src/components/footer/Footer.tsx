@@ -7,7 +7,7 @@ export default function Footer() {
 	if (pathname === "/") {
 		return (
 			<footer className="w-full border-t border-t-border p-8 flex justify-center text-center text-xs">
-				<p>© EchoAI</p>
+				<p>© Fueltility</p>
 			</footer>
 		);
 	}
