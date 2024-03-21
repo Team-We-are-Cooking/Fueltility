@@ -3,7 +3,7 @@
 import { getFuelQuote } from "@/utils/fetchReq";
 import { useState, useEffect } from "react";
 
-export default function Page() {
+export default async function Page() {
 	/*
 	const fuelQuoteHistory = [{
 		gallonsRequested: 100,
@@ -18,25 +18,10 @@ export default function Page() {
 	}];
 	*/
 
-	const [fuelQuoteHistory, setFuelQuoteHistory] = useState([]);
-
-    useEffect(() => {
-        async function fetchFuelQuote() {
-            try {
-                const data = await getFuelQuote("2d8d4210-0309-4940-9229-05a7a67a5d17", () => {});
-                setFuelQuoteHistory(data);
-            } catch (error) {
-                console.error("Error fetching fuel quote:", error);
-            }
-        }
-        fetchFuelQuote();
-    });
-	// const fuelQuoteHistory = await getFuelQuote("2d8d4210-0309-4940-9229-05a7a67a5d17", () => {})
-	console.log(fuelQuoteHistory)
 	return (
-
 		<div className="text-neutral-200 p-12">
 			<h1 className="text-3xl font-semibold text-neutral-100 pb-16">Fuel Quote History</h1>
+
 			<table className="text-neutral-400 text-sm font-medium leading-6 w-full border border-inputBorder">
 				<thead className="bg-[#2E2E2E]">
 					<tr>
@@ -46,17 +31,17 @@ export default function Page() {
 						<th className="border-r border-inputBorder">Suggested Price</th>
 					</tr>
 				</thead>
-				{/* <tbody className="text-center">
-					{fuelQuoteHistory.data.map((quote, index) => (
+				<tbody className="text-center">
+					{fuelQuoteHistory.data.map((quote:any, index:number) => (
 
 					<tr className="border-b border-inputBorder">
-						<td className="border-r border-inputBorder">{quote}</td>
-						<td className="border-r border-inputBorder">{quote}</td>
-						<td className="border-r border-inputBorder">{quote}</td>
-						<td className="border-r border-inputBorder">{quote}</td>
+						<td className="border-r border-inputBorder">{quote.gallonsRequested}</td>
+						<td className="border-r border-inputBorder">{quote.deliveryAddress}</td>
+						<td className="border-r border-inputBorder">{quote.deliveryDate}</td>
+						<td className="border-r border-inputBorder">{quote.suggestedPrice}</td>
 					</tr>
 					))}
-				</tbody> */}
+				</tbody>
 			</table>
 		</div>
 	);
