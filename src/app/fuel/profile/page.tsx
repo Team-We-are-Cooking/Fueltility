@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { Timestamp } from "firebase/firestore";
 import { states } from "./state";
+import { putProfile } from "../../../utils/fetchReq"
 
 export default function Page() {
 	const router = useRouter();
@@ -14,22 +14,26 @@ export default function Page() {
 
 		const formRef = e.currentTarget as HTMLFormElement;
 		const formData = new FormData(e.currentTarget as HTMLFormElement);
-		const fullName = formData.get("fullName") as string;
+		const firstName = formData.get("firstName") as string;
+		const lastName = formData.get("lastName") as string;
 		const address1 = formData.get("address1") as string;
 		const address2 = formData.get("address2") as string;
 		const city = formData.get("city") as string;
 		const state = formData.get("state") as string;
 		const zipcode = formData.get("zipcode") as string;
 
-		if (!fullName || !address1 || !city || !state || !zipcode) {
+		if (!firstName || !lastName || !address1 || !city || !state || !zipcode) {
 			toast.error("All fields are required");
 			return;
 		}
 
+		const res = await putProfile("70916454-df22-4b07-882e-f0490a9ec619", formData, () => {})
+
 		if (formRef) {
 			formRef.reset();
 		}
-	}
+		
+	} 
 
 	async function validateName(e: React.ChangeEvent<HTMLInputElement>){
 		e.preventDefault();
@@ -62,25 +66,49 @@ export default function Page() {
 				<div className="space-y-12">
 					<div className="">
 						<div className="mt-10 flex flex-col gap-6">
-							<div className="max-w-3xl">
-								<label
-									htmlFor="title"
-									className="block text-sm font-medium leading-6 text-neutral-400"
-								>
-									Full Name
-								</label>
-								<div className="relative mt-2 rounded-md shadow-sm">
-									<input
-										type="text"
-										name="fullName"
-										id="fullName"
-										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-										placeholder="John Doe" 
-										minLength={1}
-										maxLength={50}
-										onChange={validateName}
-										required
-									/>
+							<div className="flex max-w-3xl justify-between">
+								<div className="w-full">
+									<label
+										htmlFor="title"
+										className="block text-sm font-medium leading-6 text-neutral-400"
+									>
+										First Name
+									</label>
+									<div className="relative mt-2 rounded-md shadow-sm">
+										<input
+											type="text"
+											name="firstName"
+											id="firstName"
+											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+											placeholder="John" 
+											minLength={1}
+											maxLength={50}
+											onChange={validateName}
+											required
+										/>
+									</div>
+								</div>
+
+								<div className="ml-6 w-full">
+									<label
+										htmlFor="title"
+										className="block text-sm font-medium leading-6 text-neutral-400"
+									>
+										Last Name
+									</label>
+									<div className="relative mt-2 rounded-md shadow-sm">
+										<input
+											type="text"
+											name="lastName"
+											id="lastName"
+											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+											placeholder="Doe" 
+											minLength={1}
+											maxLength={50}
+											onChange={validateName}
+											required
+										/>
+									</div>
 								</div>
 							</div>
 
