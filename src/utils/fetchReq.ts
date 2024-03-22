@@ -83,10 +83,7 @@ export async function getFuelQuote(
 ) {
 
 	try {
-		const res = await fetch(`http://localhost:3001/api/fuel_quote?quote_id=${quote_id}&user_id=${user_id}`, {
-			method: "GET"
-		});
-
+		const res = await fetch(`http://localhost:3001/api/fuel_quote?quote_id=${quote_id}&user_id=${user_id}`);
 		return await res.json();
 	} catch (error) {
 		setIsLoading(false);

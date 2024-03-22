@@ -190,7 +190,7 @@ export default function Page() {
 										id="state" 
 										className="block w-full h-10 rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors overflow-hidden" 
 										required> 
-											<option disabled selected hidden>Select</option>
+											<option disabled selected hidden value="">Select</option>
 											{Object.entries(states).map(([state, st]) => (
 												<option key={state} value={state}>
 													{st}
