@@ -20,6 +20,17 @@ export default function Page() {
 			return;
 		}
 
+		await fetch(`http://localhost:3001/api/login`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				"username": username,
+				"password": password,
+				"email": email,
+			})
+		});
 		console.log({ email, password, username });
 
 		router.push("/fuel");
