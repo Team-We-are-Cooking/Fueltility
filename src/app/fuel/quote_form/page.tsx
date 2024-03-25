@@ -3,16 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Datepicker from "react-tailwindcss-datepicker";
-import { useRouter } from "next/navigation";
-import { Timestamp } from "firebase/firestore";
 
 export default function Page() {
 
-	const [DeliveryDate, setDeliveryDate] = useState({
+	const [deliveryDate, setDeliveryDate] = useState({
 		startDate: null,
-		endDate: null,
+		endDate: null
 	});
-	const router = useRouter();
 
 	const handleDateChange = (newValue: any) => {
 		setDeliveryDate(newValue);
@@ -23,21 +20,53 @@ export default function Page() {
 
 		const formRef = e.currentTarget as HTMLFormElement;
 		const formData = new FormData(e.currentTarget as HTMLFormElement);
-		const gallonsRequested = formData.get("gallonsRequested") as string;
-		if (!gallonsRequested || !DeliveryDate.startDate) {
+		const gallonsRequested = parseInt(formData.get("gallons_requested") as string) as number;
+		const dateRequested = deliveryDate.startDate
+		const address = formData.get("delivery_address") as string;
+		if (!gallonsRequested || !dateRequested || !address) {
 			toast.error("All fields are required");
-			return;
+			return
 		}
 
-		const date = new Date(DeliveryDate.startDate);
-		const timestamp = Timestamp.fromDate(date);
+		formData.set("delivery_date", dateRequested)
 
-		setDeliveryDate({ startDate: null, endDate: null });
+		await fetch(`http://localhost:3001/api/fuel_quote`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				"user_id": "30ec44fe-a580-40cd-b53f-6f761f5c7165",
+    			"gallons_requested": gallonsRequested, 
+    			"delivery_address": address,
+    			"delivery_date": dateRequested
+			})
+		});
+
 
 		if (formRef) {
 			formRef.reset();
 		}
 	}
+
+	// const [data, setData] = useState<any>([]);
+	  
+	// 	useEffect(() => {
+	// 	  fetchData();
+	// 	}, []);
+	  
+	// 	const fetchData = async () => {
+	// 	  try {
+	// 		const response = await fetch('http://localhost:3001/api/fuel_quote?quote_id="');
+	// 		const jsonData = await response.json();
+	// 		console.log(jsonData)
+	// 		setData(jsonData.data);
+	// 	  } catch (error) {
+	// 		console.error('Error fetching data:', error);
+	// 	  }
+	// 	}
+
+	
     return (
 		<div className="text-neutral-200 p-12">
 		<h1 className="text-3xl font-semibold text-neutral-100">Fuel Quote Form</h1>
@@ -47,18 +76,23 @@ export default function Page() {
 					<div className="mt-10 flex flex-col gap-6">
 						<div className="max-w-3xl">
 							<label
-								htmlFor="address"
+								htmlFor="date"
 								className="block text-sm font-medium leading-6 text-neutral-400"
 							>
 								Delivery Address
 							</label>
-							<div className="relative mt-2 rounded-md shadow-sm">
-								<p
-									id="address"
-									className="block w-full rounded-md py-1.5 px-3 sm:text-sm sm:leading-6 transition-colors"
-								>
-									Your delivery address here
-								</p>
+							<div className="mt-2 max-w-3xl">
+								<input
+										type="text"
+										name="delivery_address"
+										id="delivery_address"
+										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
+										placeholder="1234 Richard Rd"
+										minLength={1} 
+										maxLength={100}
+										required
+										
+									/>
 							</div>
 						</div>
 
@@ -72,9 +106,10 @@ export default function Page() {
 							<div className="mt-2 max-w-3xl">
 								<Datepicker
 									inputClassName="bg-inputBG w-full max-w-3xl rounded-md py-1.5 px-3 border border-inputBorder placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors text-neutral-100"
-									value={DeliveryDate}
+									value={deliveryDate}
 									onChange={handleDateChange}
 									popoverDirection="down"
+									asSingle={true}
 								/>
 							</div>
 						</div>
@@ -82,7 +117,7 @@ export default function Page() {
 
 						<div className="max-w-3xl">
 							<label
-								htmlFor="gallonsRequested"
+								htmlFor="gallons_requested"
 								className="block text-sm font-medium leading-6 text-neutral-400"
 							>
 								Gallons Requested
@@ -90,8 +125,8 @@ export default function Page() {
 							<div className="relative mt-2 rounded-md shadow-sm">
 								<input
 									type="number"
-									name="gallonsRequested" // this is used in formData.get("gallonsRequested")
-									id="gallonsRequested"
+									name="gallons_requested"
+									id="gallons_requested"
 									className="block w-1/4 rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 									placeholder="0"
 									min="0"

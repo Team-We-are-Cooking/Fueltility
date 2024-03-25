@@ -26,10 +26,24 @@ export default function Page() {
 			toast.error("All fields are required");
 			return;
 		}
-
-		const res = await putProfile("70916454-df22-4b07-882e-f0490a9ec619", formData, () => {})
+		await fetch(`http://localhost:3001/api/profile?user_id=70916454-df22-4b07-882e-f0490a9ec619`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				"first_name": firstName,
+				"last_name": lastName,
+				"address": address1,
+				"address_two": address2,
+				"city": city,
+				"state": state,
+				"zip_code": zipcode
+			})
+		});
 
 		if (formRef) {
+			toast.success("Information Updated")
 			formRef.reset();
 		}
 		
