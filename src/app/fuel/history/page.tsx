@@ -2,10 +2,12 @@
 
 import { getFuelQuote } from "@/utils/fetchReq";
 import { useEffect, useState } from "react";
+import Loading from "./loading";
 
 export default function Page() {
 
 		const [data, setData] = useState<any>([]);
+		const [loading, isLoading] = useState<boolean>(true);
 	  
 		useEffect(() => {
 		  fetchData();
@@ -17,6 +19,7 @@ export default function Page() {
 			const jsonData = await response.json();
 			console.log(jsonData)
 			setData(jsonData.data);
+			isLoading(false);
 		  } catch (error) {
 			console.error('Error fetching data:', error);
 		  }
@@ -25,6 +28,9 @@ export default function Page() {
 	
 	return (
 		<div className="text-neutral-200 p-12">
+			{loading ? <Loading />
+			:
+			<>
 			<h1 className="text-3xl font-semibold text-neutral-100 pb-16">Fuel Quote History</h1>
 
 			<table className="text-neutral-400 text-sm font-medium leading-6 w-full border border-inputBorder">
@@ -48,6 +54,8 @@ export default function Page() {
 					))}
 				</tbody>
 			</table>
+			</>
+			}
 		</div>
 	);
 }
