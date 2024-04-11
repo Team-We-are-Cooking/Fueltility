@@ -11,6 +11,24 @@ export default function Page() {
 		endDate: null
 	});
 
+	const [address, setData] = useState<any>([]);
+	  
+		useEffect(() => {
+		  fetchData();
+		}, []);
+	  
+		const fetchData = async () => {
+		  try {
+			const response = await fetch('http://localhost:3001/api/profile?user_id=70916454-df22-4b07-882e-f0490a9ec619');
+			const jsonData = await response.json();	
+			const addy = `${jsonData.data[0].address} ${jsonData.data[0].address_two} ${jsonData.data[0].city} ${jsonData.data[0].city}, ${jsonData.data[0].state}`
+			setData(addy)
+
+		  } catch (error) {
+			console.error('Error fetching data:', error);
+		  }
+		}
+
 	const handleDateChange = (newValue: any) => {
 		setDeliveryDate(newValue);
 	};
@@ -43,7 +61,6 @@ export default function Page() {
 			})
 		});
 
-
 		if (formRef) {
 			toast.success("Form Created")
 			formRef.reset();
@@ -66,17 +83,7 @@ export default function Page() {
 								Delivery Address
 							</label>
 							<div className="mt-2 max-w-3xl">
-								<input
-										type="text"
-										name="delivery_address"
-										id="delivery_address"
-										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-										placeholder="1234 Richard Rd"
-										minLength={1} 
-										maxLength={100}
-										required
-										
-									/>
+								{address}
 							</div>
 						</div>
 
