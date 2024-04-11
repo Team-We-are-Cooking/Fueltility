@@ -37,7 +37,7 @@ export default function Page() {
 			})
 		});
 
-		router.push("/fuel");
+		router.push("/fuel/profile");
 	}
 
 	return (

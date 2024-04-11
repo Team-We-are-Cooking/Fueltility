@@ -40,7 +40,6 @@ export default function Page() {
 		const formData = new FormData(e.currentTarget as HTMLFormElement);
 		const gallonsRequested = parseInt(formData.get("gallons_requested") as string) as number;
 		const dateRequested = deliveryDate.startDate
-		const address = formData.get("delivery_address") as string;
 		if (!gallonsRequested || !dateRequested || !address) {
 			toast.error("All fields are required");
 			return
