@@ -1,19 +1,24 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-type userStore = {
+type UserState = {
 	userId: string;
 	setUserId: (id: string) => void;
 	clearInfo: () => void;
 };
 
-export const useUserStore = create<userStore>((set) => ({
-	userId: "",
-	setUserId: (id: string) => set({ userId: id }),
-	clearInfo: () =>
-		set({
+export const useUserStore = create<UserState>()(
+	persist(
+		(set, get) => ({
 			userId: "",
+			setUserId: (id: string) => set({ userId: id }),
+			clearInfo: () =>
+				set({
+					userId: "",
+				}),
 		}),
-}));
-
-const { clearInfo, setUserId, userId } = useUserStore.getState();
-const userLoggedIn = userId === "" ? "Login" : "Logout";
+		{
+			name: "fueltility-storage",
+		}
+	)
+);
