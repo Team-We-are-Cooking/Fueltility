@@ -3,9 +3,16 @@
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { useState } from "react";
+import { useUserStore } from "@/store/userStore";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
+import type { HTTPResponse } from "../../../types/http";
+import type { AuthData } from "../../../types/auth";
 
 export default function Page() {
 	const router = useRouter();
+	const [isLoading, setIsLoading] = useState(false);
+	const { setUserId } = useUserStore.getState();
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -25,19 +32,47 @@ export default function Page() {
 			return;
 		}
 
-		await fetch(`http://localhost:3001/api/register`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				"username": username,
-				"password": password,
-				"email": email,
-			})
-		});
+		setIsLoading(true);
 
-		router.push("/fuel");
+		try {
+			const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					username: username,
+					password: password,
+					email: email,
+				}),
+			});
+
+			setIsLoading(false);
+
+			if (!res.ok) {
+				toast.error("Invalid credentials.");
+				return;
+			}
+
+			const responseData: HTTPResponse<AuthData> = await res.json();
+			const data = responseData.data;
+
+			if (data.length === 0) {
+				toast.error("Internal Server Error.");
+				return;
+			}
+
+			setUserId(data[0]?.id);
+
+			router.push("/fuel");
+		} catch (error) {
+			toast.error("Internal Server Error.");
+			return;
+		}
+	}
+
+	if (isLoading) {
+		return <LoadingSpinner />;
 	}
 
 	return (
@@ -106,7 +141,10 @@ export default function Page() {
 						</div>
 					</div>
 
-					<button className="w-full bg-mainButton mt-8 rounded-md border border-mainButtonBorder hover:bg-mainButtonHover py-2 transition-colors text-neutral-300">
+					<button
+						disabled={isLoading}
+						className="w-full bg-mainButton mt-8 rounded-md border border-mainButtonBorder hover:bg-mainButtonHover py-2 transition-colors text-neutral-300 disabled:cursor-not-allowed"
+					>
 						Sign up
 					</button>
 				</form>
