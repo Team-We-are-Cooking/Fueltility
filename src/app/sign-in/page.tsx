@@ -3,16 +3,16 @@
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { useUserStore } from "@/store/userStore";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import type { HTTPResponse } from "../../../types/http";
 import type { AuthData } from "../../../types/auth";
+import { UserContext } from "@/components/providers/UserContext";
 
 export default function Page() {
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
-	const { setUserId } = useUserStore.getState();
+	const auth = useContext(UserContext);
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -57,7 +57,8 @@ export default function Page() {
 				return;
 			}
 
-			setUserId(data[0]?.id);
+			auth?.setUserId(data[0]?.id);
+			// setUserId(data[0]?.id);
 
 			router.push("/fuel");
 		} catch (error) {
@@ -106,7 +107,7 @@ export default function Page() {
 						</label>
 						<div className="relative mt-2 rounded-md shadow-sm">
 							<input
-								type="text"
+								type="email"
 								name="email"
 								id="email"
 								className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"

@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/navbar/Navbar";
-import Footer from "@/components/footer/Footer";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Providers from "@/components/providers/Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,13 +19,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`${inter.className} bg-main text-neutral-200`}>
-				<Navbar />
-				<div className="flex flex-col min-h-custom">
-					<div className="flex-grow">{children}</div>
-					<Footer />
-				</div>
-
-				<ToastContainer autoClose={3000} theme="dark" />
+				<Providers>{children}</Providers>
 			</body>
 		</html>
 	);

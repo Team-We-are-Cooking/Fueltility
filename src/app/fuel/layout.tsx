@@ -1,24 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import SideBar from "@/components/sideBar/SideBar";
 import { useEffect } from "react";
 import { redirect, useRouter } from "next/navigation";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
-import { useUserStore } from "@/store/userStore";
+import { UserContext } from "@/components/providers/UserContext";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 	const router = useRouter();
-	const { userId } = useUserStore.getState();
+	const auth = useContext(UserContext);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		if (userId === "") {
+		if (auth?.userId === "") {
 			redirect("/sign-in");
 		}
 
 		setLoading(false);
-	}, [router, userId]);
+	}, [router, auth?.userId]);
 
 	if (loading) {
 		return <LoadingSpinner />;
