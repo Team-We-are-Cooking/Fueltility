@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useContext, useState } from "react";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import type { HTTPResponse } from "../../../types/http";
-import type { AuthData } from "../../../types/auth";
+import type { AuthData, Credentials } from "../../../types/auth";
 import { UserContext } from "@/components/providers/UserContext";
 
 export default function Page() {
@@ -27,6 +27,12 @@ export default function Page() {
 			return;
 		}
 
+		const userCreds: Credentials = {
+			email,
+			password,
+			username,
+		};
+
 		setIsLoading(true);
 
 		try {
@@ -35,14 +41,8 @@ export default function Page() {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({
-					username: username,
-					password: password,
-					email: email,
-				}),
+				body: JSON.stringify(userCreds),
 			});
-
-			setIsLoading(false);
 
 			if (!res.ok) {
 				toast.error("Invalid credentials.");
@@ -58,11 +58,13 @@ export default function Page() {
 			}
 
 			auth?.setUserId(data[0]?.id);
-			// setUserId(data[0]?.id);
 
+			toast.success("Logged in successfully.");
 			router.push("/fuel");
 		} catch (error) {
 			console.error(error);
+		} finally {
+			setIsLoading(false);
 		}
 	}
 

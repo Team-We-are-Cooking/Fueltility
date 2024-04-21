@@ -4,16 +4,14 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { useContext, useState } from "react";
-import { useUserStore } from "@/store/userStore";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import type { HTTPResponse } from "../../../types/http";
-import type { AuthData } from "../../../types/auth";
+import type { AuthData, Credentials } from "../../../types/auth";
 import { UserContext } from "@/components/providers/UserContext";
 
 export default function Page() {
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
-	const { setUserId } = useUserStore.getState();
 	const auth = useContext(UserContext);
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -34,6 +32,12 @@ export default function Page() {
 			return;
 		}
 
+		const userCreds: Credentials = {
+			username: username,
+			password: password,
+			email: email,
+		};
+
 		setIsLoading(true);
 
 		try {
@@ -42,14 +46,8 @@ export default function Page() {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({
-					username: username,
-					password: password,
-					email: email,
-				}),
+				body: JSON.stringify(userCreds),
 			});
-
-			setIsLoading(false);
 
 			if (!res.ok) {
 				toast.error("Invalid credentials.");
@@ -65,12 +63,14 @@ export default function Page() {
 			}
 
 			auth?.setUserId(data[0]?.id);
-			// setUserId(data[0]?.id);
 
-			router.push("/fuel");
+			toast.success("Registered successfully.");
+			router.push("/fuel/profile");
 		} catch (error) {
 			toast.error("Internal Server Error.");
 			return;
+		} finally {
+			setIsLoading(false);
 		}
 	}
 
@@ -115,7 +115,7 @@ export default function Page() {
 						</label>
 						<div className="relative mt-2 rounded-md shadow-sm">
 							<input
-								type="text"
+								type="email"
 								name="email"
 								id="email"
 								className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-400 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"

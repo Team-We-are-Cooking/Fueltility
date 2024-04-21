@@ -1,12 +1,14 @@
 "use client";
 
 import { getFuelQuote } from "@/utils/fetchReq";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
+import { UserContext } from "@/components/providers/UserContext";
 
 export default function Page() {
 	const [data, setData] = useState<any>([]);
 	const [loading, isLoading] = useState<boolean>(true);
+	const auth = useContext(UserContext);
 
 	useEffect(() => {
 		fetchData();
@@ -15,7 +17,7 @@ export default function Page() {
 	const fetchData = async () => {
 		try {
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/fuel_quote?quote_id=&user_id=30ec44fe-a580-40cd-b53f-6f761f5c7165`
+				`${process.env.NEXT_PUBLIC_API_URL}/fuel_quote?quote_id=&user_id=${auth?.userId}`
 			);
 			const jsonData = await response.json();
 			console.log(jsonData);

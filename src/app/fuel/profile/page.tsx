@@ -1,13 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useContext } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { states } from "./states";
 import { putProfile } from "../../../utils/fetchReq";
+import { UserContext } from "@/components/providers/UserContext";
+
+type ProfileForm = {
+	firstName: string;
+	lastName: string;
+	address1: string;
+	address2: string;
+	city: string;
+	state: string;
+	zipcode: string;
+};
 
 export default function Page() {
 	const router = useRouter();
+	const auth = useContext(UserContext);
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -26,22 +38,25 @@ export default function Page() {
 			toast.error("All fields are required");
 			return;
 		}
+
+		const profileData: ProfileForm = {
+			firstName,
+			lastName,
+			address1,
+			address2,
+			city,
+			state,
+			zipcode,
+		};
+
 		await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/profile?user_id=70916454-df22-4b07-882e-f0490a9ec619`,
+			`${process.env.NEXT_PUBLIC_API_URL}/profile?user_id=${auth?.userId}`,
 			{
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({
-					first_name: firstName,
-					last_name: lastName,
-					address: address1,
-					address_two: address2,
-					city: city,
-					state: state,
-					zip_code: zipcode,
-				}),
+				body: JSON.stringify(profileData),
 			}
 		);
 
