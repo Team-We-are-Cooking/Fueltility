@@ -3,16 +3,18 @@
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useUserStore } from "@/store/userStore";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import type { HTTPResponse } from "../../../types/http";
 import type { AuthData } from "../../../types/auth";
+import { UserContext } from "@/components/providers/UserContext";
 
 export default function Page() {
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
 	const { setUserId } = useUserStore.getState();
+	const auth = useContext(UserContext);
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -62,7 +64,8 @@ export default function Page() {
 				return;
 			}
 
-			setUserId(data[0]?.id);
+			auth?.setUserId(data[0]?.id);
+			// setUserId(data[0]?.id);
 
 			router.push("/fuel");
 		} catch (error) {

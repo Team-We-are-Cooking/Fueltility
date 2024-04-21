@@ -3,17 +3,17 @@
 import Link from "next/link";
 import { FunnelIcon } from "@heroicons/react/20/solid";
 import { useRouter } from "next/navigation";
-import { useUserStore } from "@/store/userStore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../providers/UserContext";
 
 export default function Navbar() {
 	const router = useRouter();
-	const { userId, clearInfo } = useUserStore.getState();
+	const auth = useContext(UserContext);
 	const [isClient, setIsClient] = useState(false);
 
 	function handleSignOut() {
-		clearInfo();
-		router.push("/");
+		auth?.clearInfo();
+		router.push("/sign-in");
 	}
 
 	useEffect(() => {
@@ -28,21 +28,23 @@ export default function Navbar() {
 					<p className="font-bold">Fueltility</p>
 				</Link>
 
-				{isClient && userId !== "" ? (
-					<button
-						onClick={handleSignOut}
-						className="py-2 px-4 flex rounded-md no-underline bg-mainButton hover:bg-mainButtonHover text-xs font-medium"
-					>
-						Sign out
-					</button>
-				) : (
-					<Link
-						href={"/sign-in"}
-						className="py-2 px-4 flex rounded-md no-underline bg-mainButton hover:bg-mainButtonHover text-xs font-medium"
-					>
-						Sign in
-					</Link>
-				)}
+				<>
+					{isClient && auth?.userId !== "" ? (
+						<button
+							onClick={handleSignOut}
+							className="py-2 px-4 flex rounded-md no-underline bg-mainButton hover:bg-mainButtonHover text-xs font-medium"
+						>
+							Sign out
+						</button>
+					) : (
+						<Link
+							href={"/sign-in"}
+							className="py-2 px-4 flex rounded-md no-underline bg-mainButton hover:bg-mainButtonHover text-xs font-medium"
+						>
+							Sign in
+						</Link>
+					)}
+				</>
 			</div>
 		</nav>
 	);
