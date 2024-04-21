@@ -3,8 +3,8 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { states } from "./state";
-import { putProfile } from "../../../utils/fetchReq"
+import { states } from "./states";
+import { putProfile } from "../../../utils/fetchReq";
 
 export default function Page() {
 	const router = useRouter();
@@ -26,42 +26,44 @@ export default function Page() {
 			toast.error("All fields are required");
 			return;
 		}
-		await fetch(`http://localhost:3001/api/profile?user_id=70916454-df22-4b07-882e-f0490a9ec619`, {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				"first_name": firstName,
-				"last_name": lastName,
-				"address": address1,
-				"address_two": address2,
-				"city": city,
-				"state": state,
-				"zip_code": zipcode
-			})
-		});
+		await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/profile?user_id=70916454-df22-4b07-882e-f0490a9ec619`,
+			{
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					first_name: firstName,
+					last_name: lastName,
+					address: address1,
+					address_two: address2,
+					city: city,
+					state: state,
+					zip_code: zipcode,
+				}),
+			}
+		);
 
 		if (formRef) {
-			toast.success("Information Updated")
+			toast.success("Information Updated");
 			formRef.reset();
 		}
-		
-	} 
+	}
 
-	async function validateName(e: React.ChangeEvent<HTMLInputElement>){
+	async function validateName(e: React.ChangeEvent<HTMLInputElement>) {
 		e.preventDefault();
 		const name = e.target.value;
 		if (/\d/.test(name)) {
-			toast.error("Name should only have non-numerical characters")
+			toast.error("Name should only have non-numerical characters");
 		}
 	}
 
 	async function validateZipcode(e: React.ChangeEvent<HTMLInputElement>) {
 		e.preventDefault();
 		const name = e.target.value;
-		if (!(/^\d+$/.test(name))) {
-			toast.error("Name should only have numerical characters")
+		if (!/^\d+$/.test(name)) {
+			toast.error("Name should only have numerical characters");
 		}
 	}
 
@@ -69,13 +71,15 @@ export default function Page() {
 		e.preventDefault();
 		const name = e.target.value;
 		if (/^\d+$/.test(name)) {
-			toast.error("Name should only have non-numerical characters")
+			toast.error("Name should only have non-numerical characters");
 		}
 	}
 
 	return (
 		<div className="text-neutral-200 p-12">
-			<h1 className="text-3xl font-semibold text-neutral-100">Profile Management</h1>
+			<h1 className="text-3xl font-semibold text-neutral-100">
+				Profile Management
+			</h1>
 			<form onSubmit={handleSubmit}>
 				<div className="space-y-12">
 					<div className="">
@@ -94,7 +98,7 @@ export default function Page() {
 											name="firstName"
 											id="firstName"
 											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-											placeholder="John" 
+											placeholder="John"
 											minLength={1}
 											maxLength={50}
 											onChange={validateName}
@@ -116,7 +120,7 @@ export default function Page() {
 											name="lastName"
 											id="lastName"
 											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
-											placeholder="Doe" 
+											placeholder="Doe"
 											minLength={1}
 											maxLength={50}
 											onChange={validateName}
@@ -140,10 +144,9 @@ export default function Page() {
 										id="address1"
 										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 										placeholder="1234 Richard Rd"
-										minLength={1} 
+										minLength={1}
 										maxLength={100}
 										required
-										
 									/>
 								</div>
 							</div>
@@ -162,7 +165,7 @@ export default function Page() {
 										id="address2"
 										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 										placeholder="Apartment #1"
-										minLength={1} 
+										minLength={1}
 										maxLength={100}
 									/>
 								</div>
@@ -183,7 +186,7 @@ export default function Page() {
 											id="city"
 											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 											placeholder="San Antonio"
-											minLength={1} 
+											minLength={1}
 											maxLength={100}
 											onChange={validateCity}
 											required
@@ -199,15 +202,15 @@ export default function Page() {
 										State
 									</label>
 									<div className="relative mt-2 rounded-md shadow-sm">
-										<select 
-										name="state" 
-										id="state" 
-										className="block w-full h-10 rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors overflow-hidden" 
-										required> 
-											<option disabled selected hidden value="">Select</option>
-											{Object.entries(states).map(([state, st]) => (
+										<select
+											name="state"
+											id="state"
+											className="block w-full h-10 rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors overflow-hidden"
+											required
+										>
+											{Object.entries(states).map(([state, abbrev]) => (
 												<option key={state} value={state}>
-													{st}
+													{abbrev}
 												</option>
 											))}
 										</select>
@@ -228,7 +231,7 @@ export default function Page() {
 											id="zipcode"
 											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 											placeholder="######"
-											minLength={5} 
+											minLength={5}
 											maxLength={9}
 											onChange={validateZipcode}
 											required

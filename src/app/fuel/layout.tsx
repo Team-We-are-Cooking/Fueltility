@@ -1,21 +1,28 @@
 "use client";
 
-import React from "react";
+import { useState } from "react";
 import SideBar from "@/components/sideBar/SideBar";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import { useUserStore } from "@/store/userStore";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 	const router = useRouter();
 	const { userId } = useUserStore.getState();
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		if (userId === "") {
-			router.push("/sign-in");
+			redirect("/sign-in");
 		}
+
+		setLoading(false);
 	}, [router, userId]);
+
+	if (loading) {
+		return <LoadingSpinner />;
+	}
 
 	return (
 		<div className="flex">
