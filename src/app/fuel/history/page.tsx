@@ -15,7 +15,7 @@ export default function Page() {
 	const fetchData = async () => {
 		try {
 			const response = await fetch(
-				"http://localhost:3001/api/fuel_quote?quote_id=&user_id=30ec44fe-a580-40cd-b53f-6f761f5c7165"
+				`${process.env.NEXT_PUBLIC_API_URL}/fuel_quote?quote_id=&user_id=30ec44fe-a580-40cd-b53f-6f761f5c7165`
 			);
 			const jsonData = await response.json();
 			console.log(jsonData);
