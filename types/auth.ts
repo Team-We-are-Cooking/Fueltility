@@ -3,3 +3,9 @@ export type AuthData = {
 	email: string;
 	username: string;
 };
+
+export type Credentials = {
+	username: string;
+	email: string;
+	password: string;
+};
