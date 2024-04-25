@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import Datepicker from "react-tailwindcss-datepicker";
+import { UserContext } from "@/components/providers/UserContext";
 
 export default function Page() {
 	const [deliveryDate, setDeliveryDate] = useState({
@@ -13,6 +14,8 @@ export default function Page() {
 	const handleDateChange = (newValue: any) => {
 		setDeliveryDate(newValue);
 	};
+
+	const auth = useContext(UserContext);
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -37,7 +40,7 @@ export default function Page() {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-				user_id: "30ec44fe-a580-40cd-b53f-6f761f5c7165",
+				user_id: auth?.userId,
 				gallons_requested: gallonsRequested,
 				delivery_address: address,
 				delivery_date: dateRequested,
