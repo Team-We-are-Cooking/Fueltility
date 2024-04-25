@@ -4,10 +4,18 @@ import { getFuelQuote } from "@/utils/fetchReq";
 import { useContext, useEffect, useState } from "react";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import { UserContext } from "@/components/providers/UserContext";
+import { toast } from "react-toastify";
+
+type FuelQuoteData = {
+	gallons_requested: number;
+	delivery_address: string;
+	delivery_date: string;
+	suggested_price: number;
+};
 
 export default function Page() {
-	const [data, setData] = useState<any>([]);
-	const [loading, isLoading] = useState<boolean>(true);
+	const [data, setData] = useState<FuelQuoteData[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const auth = useContext(UserContext);
 
 	useEffect(() => {
@@ -16,19 +24,27 @@ export default function Page() {
 
 	const fetchData = async () => {
 		try {
+			setIsLoading(true);
 			const response = await fetch(
 				`${process.env.NEXT_PUBLIC_API_URL}/fuel_quote?quote_id=&user_id=${auth?.userId}`
 			);
-			const jsonData = await response.json();
-			console.log(jsonData);
-			setData(jsonData.data);
-			isLoading(false);
+
+			if (!response.ok) {
+				toast.error("Error fetching data");
+				return;
+			}
+
+			const resData = await response.json();
+			const data: FuelQuoteData[] = resData.data;
+			setData(data);
 		} catch (error) {
 			console.error("Error fetching data:", error);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
-	if (loading) {
+	if (isLoading) {
 		return <LoadingSpinner />;
 	}
 

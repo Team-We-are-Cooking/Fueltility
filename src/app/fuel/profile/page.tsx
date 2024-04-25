@@ -1,93 +1,178 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import { states } from "./states";
-import { putProfile } from "../../../utils/fetchReq";
 import { UserContext } from "@/components/providers/UserContext";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
 type ProfileForm = {
-	firstName: string;
-	lastName: string;
-	address1: string;
-	address2: string;
+	first_name: string;
+	last_name: string;
+	address: string;
+	address_two: string;
 	city: string;
 	state: string;
-	zipcode: string;
+	zip_code: string;
+};
+
+type ErrorHTTP = {
+	success: boolean;
+	error: ErrorMessage;
+};
+
+type ErrorMessage = {
+	message: string;
 };
 
 export default function Page() {
-	const router = useRouter();
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [profileData, setProfileData] = useState<ProfileForm>({
+		first_name: "",
+		last_name: "",
+		address: "",
+		address_two: "",
+		city: "",
+		state: "",
+		zip_code: "",
+	});
+
 	const auth = useContext(UserContext);
+
+	useEffect(() => {
+		fetchData();
+	}, []);
+
+	const fetchData = async () => {
+		try {
+			setIsLoading(true);
+			const response = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}/profile?quote_id=&user_id=${auth?.userId}`
+			);
+
+			if (!response.ok) {
+				toast.error("Error fetching data");
+				return;
+			}
+
+			const jsonData = await response.json();
+			const data: ProfileForm = jsonData.data[0];
+
+			setProfileData({
+				first_name: data.first_name ? data.first_name : "",
+				last_name: data.last_name ? data.last_name : "",
+				address: data.address ? data.address : "",
+				address_two: data.address_two ? data.address_two : "",
+				city: data.city ? data.city : "",
+				state: data.state ? data.state : "",
+				zip_code: data.zip_code ? data.zip_code : "",
+			});
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
-		const formRef = e.currentTarget as HTMLFormElement;
-		const formData = new FormData(e.currentTarget as HTMLFormElement);
-		const firstName = formData.get("firstName") as string;
-		const lastName = formData.get("lastName") as string;
-		const address1 = formData.get("address1") as string;
-		const address2 = formData.get("address2") as string;
-		const city = formData.get("city") as string;
-		const state = formData.get("state") as string;
-		const zipcode = formData.get("zipcode") as string;
+		const firstName = profileData.first_name;
+		const lastName = profileData.last_name;
+		const address1 = profileData.address;
+		const address2 = profileData.address_two;
+		const city = profileData.city;
+		const state = profileData.state;
+		const zipcode = profileData.zip_code;
 
 		if (!firstName || !lastName || !address1 || !city || !state || !zipcode) {
 			toast.error("All fields are required");
 			return;
 		}
 
-		const profileData: ProfileForm = {
-			firstName,
-			lastName,
-			address1,
-			address2,
-			city,
-			state,
-			zipcode,
+		if (validateName(firstName)) {
+			toast.error("First name should only have non-numerical characters");
+			return;
+		}
+
+		if (validateName(lastName)) {
+			toast.error("Last name should only have non-numerical characters");
+			return;
+		}
+
+		if (validateCity(city)) {
+			toast.error("City should only have non-numerical characters");
+			return;
+		}
+
+		if (validateZipcode(zipcode)) {
+			toast.error("Zipcode should only have numerical characters");
+			return;
+		}
+
+		const formData = {
+			first_name: firstName,
+			last_name: lastName,
+			address: address1,
+			address_two: address2,
+			city: city,
+			state: state,
+			zip_code: zipcode,
 		};
 
-		await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/profile?user_id=${auth?.userId}`,
-			{
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(profileData),
+		setIsLoading(true);
+
+		try {
+			const res = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}/profile?user_id=${auth?.userId}`,
+				{
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(formData),
+				}
+			);
+
+			if (!res.ok) {
+				const resData: ErrorHTTP = await res.json();
+				const errorMessage = resData.error.message;
+
+				toast.error(`Error updating profile: ${errorMessage}`);
+				return;
 			}
-		);
 
-		if (formRef) {
 			toast.success("Information Updated");
-			formRef.reset();
+		} catch (error) {
+			console.error("Error updating information:", error);
+		} finally {
+			setIsLoading(false);
 		}
 	}
 
-	async function validateName(e: React.ChangeEvent<HTMLInputElement>) {
-		e.preventDefault();
-		const name = e.target.value;
-		if (/\d/.test(name)) {
-			toast.error("Name should only have non-numerical characters");
-		}
+	function handleChange(
+		e:
+			| React.ChangeEvent<HTMLInputElement>
+			| React.ChangeEvent<HTMLSelectElement>
+	) {
+		const { name, value } = e.target;
+		setProfileData((prev) => ({ ...prev, [name]: value }));
 	}
 
-	async function validateZipcode(e: React.ChangeEvent<HTMLInputElement>) {
-		e.preventDefault();
-		const name = e.target.value;
-		if (!/^\d+$/.test(name)) {
-			toast.error("Name should only have numerical characters");
-		}
+	function validateName(name: string) {
+		return /\d/.test(name);
 	}
 
-	async function validateCity(e: React.ChangeEvent<HTMLInputElement>) {
-		e.preventDefault();
-		const name = e.target.value;
-		if (/^\d+$/.test(name)) {
-			toast.error("Name should only have non-numerical characters");
-		}
+	function validateZipcode(zipcode: string) {
+		return !/^\d+$/.test(zipcode);
+	}
+
+	function validateCity(city: string) {
+		return /^\d+$/.test(city);
+	}
+
+	if (isLoading) {
+		return <LoadingSpinner />;
 	}
 
 	return (
@@ -110,13 +195,14 @@ export default function Page() {
 									<div className="relative mt-2 rounded-md shadow-sm">
 										<input
 											type="text"
-											name="firstName"
-											id="firstName"
+											name="first_name"
+											id="first_name"
+											value={profileData.first_name}
 											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 											placeholder="John"
 											minLength={1}
 											maxLength={50}
-											onChange={validateName}
+											onChange={handleChange}
 											required
 										/>
 									</div>
@@ -132,13 +218,14 @@ export default function Page() {
 									<div className="relative mt-2 rounded-md shadow-sm">
 										<input
 											type="text"
-											name="lastName"
-											id="lastName"
+											name="last_name"
+											id="last_name"
+											value={profileData.last_name}
 											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 											placeholder="Doe"
 											minLength={1}
 											maxLength={50}
-											onChange={validateName}
+											onChange={handleChange}
 											required
 										/>
 									</div>
@@ -155,12 +242,14 @@ export default function Page() {
 								<div className="relative mt-2 rounded-md shadow-sm">
 									<input
 										type="text"
-										name="address1"
-										id="address1"
+										name="address"
+										id="address"
+										value={profileData.address}
 										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 										placeholder="1234 Richard Rd"
 										minLength={1}
 										maxLength={100}
+										onChange={handleChange}
 										required
 									/>
 								</div>
@@ -176,12 +265,14 @@ export default function Page() {
 								<div className="relative mt-2 rounded-md shadow-sm">
 									<input
 										type="text"
-										name="address2"
-										id="address2"
+										name="address_two"
+										id="address_two"
+										value={profileData.address_two}
 										className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 										placeholder="Apartment #1"
 										minLength={1}
 										maxLength={100}
+										onChange={handleChange}
 									/>
 								</div>
 							</div>
@@ -199,11 +290,12 @@ export default function Page() {
 											type="text"
 											name="city"
 											id="city"
+											value={profileData.city}
 											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 											placeholder="San Antonio"
 											minLength={1}
 											maxLength={100}
-											onChange={validateCity}
+											onChange={handleChange}
 											required
 										/>
 									</div>
@@ -220,6 +312,8 @@ export default function Page() {
 										<select
 											name="state"
 											id="state"
+											value={profileData.state}
+											onChange={handleChange}
 											className="block w-full h-10 rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors overflow-hidden"
 											required
 										>
@@ -242,13 +336,14 @@ export default function Page() {
 									<div className="relative mt-2 rounded-md shadow-sm">
 										<input
 											type="text"
-											name="zipcode"
-											id="zipcode"
+											name="zip_code"
+											id="zip_code"
+											value={profileData.zip_code}
 											className="block w-full rounded-md py-1.5 px-3 bg-inputBG border border-inputBorder   placeholder:text-gray-500 focus:ring-1 focus:outline-none focus:ring-inputHover sm:text-sm sm:leading-6 transition-colors"
 											placeholder="######"
 											minLength={5}
 											maxLength={9}
-											onChange={validateZipcode}
+											onChange={handleChange}
 											required
 										/>
 									</div>
