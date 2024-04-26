@@ -166,7 +166,7 @@ export default function Page() {
 						<button
 						className="py-2 px-4 flex rounded-md no-underline bg-mainButton hover:bg-mainButtonHover text-sm font-medium"
 						type="submit">
-							Save
+							Submit
 						</button>
 					}
 					
