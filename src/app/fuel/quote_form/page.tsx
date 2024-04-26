@@ -160,7 +160,7 @@ export default function Page() {
 						disabled
 						className="py-2 px-4 flex rounded-md no-underline cursor-not-allowed bg-gray-500 opacity-50 text-sm font-medium"
 						type="submit">
-							Save
+							Submit
 						</button>
 						:
 						<button
