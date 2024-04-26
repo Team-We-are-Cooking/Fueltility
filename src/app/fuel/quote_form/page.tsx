@@ -17,6 +17,9 @@ export default function Page() {
 	};
 
 	const [address, setAddress] = useState<string>("");
+	const [interstate, setInterstate] = useState<boolean>(false);
+	const [suggested_price, set_suggested_price] = useState<string>("");
+	const [total_amount_due, set_total_amount_due] = useState<string>("");
 	  
 	useEffect(() => {
 	  fetchData();
@@ -29,6 +32,7 @@ export default function Page() {
 		if (jsonData.length != 0) {
 			const addy = `${jsonData.data[0].address} ${jsonData.data[0].address_two} ${jsonData.data[0].city}, ${jsonData.data[0].state} ${jsonData.data[0].zip_code}`
 			setAddress(addy)
+			setInterstate(jsonData.data[0].state !== "Texas")
 		}
 
 	  } catch (error) {
@@ -47,30 +51,51 @@ export default function Page() {
 			formData.get("gallons_requested") as string
 		) as number;
 		const dateRequested = deliveryDate.startDate;
-		const address = formData.get("delivery_address") as string;
 		if (!gallonsRequested || !dateRequested || !address) {
 			toast.error("All fields are required");
 			return;
 		}
 
+
 		formData.set("delivery_date", dateRequested);
 
-		await fetch(`${process.env.NEXT_PUBLIC_API_URL}/fuel_quote`, {
+		const res1 = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/fuel_quote`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				user_id: auth?.userId,
+				interstate: interstate,
 				gallons_requested: gallonsRequested,
 				delivery_address: address,
 				delivery_date: dateRequested,
 			}),
 		});
 
+		const res1json = await res1.json()
+		const quote_id = res1json.data[0].quote_id;
+
+		const res4 = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pricing_module?quote_id=${quote_id}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+
+		const res2 = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/fuel_quote?quote_id=${quote_id}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		const res2json = await res2.json();
+		set_suggested_price(res2json.data[0].suggested_price)
+		set_total_amount_due(res2json.data[0].total_amount_due)
+
 		if (formRef) {
 			toast.success("Form Created");
-			formRef.reset();
+			// formRef.reset();
 		}
 	}
 
@@ -145,7 +170,25 @@ export default function Page() {
 										id="address"
 										className="block w-full rounded-md py-1.5 px-3 sm:text-sm sm:leading-6 transition-colors"
 									>
-										99999 Robux
+										{suggested_price}
+
+									</p>
+								</div>
+							</div>
+							<div className="max-w-3xl">	
+								<label
+									htmlFor="audience"
+									className="block text-sm font-medium leading-6 text-neutral-400"
+								>
+									Total amount due:
+								</label>
+								<div className="relative mt-2 rounded-md shadow-sm">
+									<p
+										id="address"
+										className="block w-full rounded-md py-1.5 px-3 sm:text-sm sm:leading-6 transition-colors"
+									>
+										{total_amount_due}
+										
 									</p>
 								</div>
 							</div>
