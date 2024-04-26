@@ -16,7 +16,7 @@ export default function Page() {
 		setDeliveryDate(newValue);
 	};
 
-	const [address, setData] = useState<any>([]);
+	const [address, setAddress] = useState<string>("");
 	  
 	useEffect(() => {
 	  fetchData();
@@ -26,8 +26,10 @@ export default function Page() {
 	  try {
 		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile?user_id=${auth?.userId}`);
 		const jsonData = await response.json();	
-		const addy = `${jsonData.data[0].address} ${jsonData.data[0].address_two} ${jsonData.data[0].city} ${jsonData.data[0].city}, ${jsonData.data[0].state}`
-		setData(addy)
+		if (jsonData.length() != 0) {
+			const addy = `${jsonData.data[0].address} ${jsonData.data[0].address_two} ${jsonData.data[0].city} ${jsonData.data[0].city}, ${jsonData.data[0].state}`
+			setAddress(addy)
+		}
 
 	  } catch (error) {
 		console.error('Error fetching data:', error);
@@ -89,7 +91,7 @@ export default function Page() {
 									Delivery Address
 								</label>
 								<div className="mt-2 max-w-3xl">
-									{address.length <= 1 ? address : "Address not found"}
+									{address === "" ? "Address not found" : address}
 								</div>
 							</div>
 
@@ -152,12 +154,22 @@ export default function Page() {
 				</div>
 
 				<div className="mt-8 flex items-center justify-end max-w-3xl">
-					<button
-						type="submit"
+					{
+						address === "" ?
+						<button
+						disabled
+						className="py-2 px-4 flex rounded-md no-underline cursor-not-allowed bg-gray-500 opacity-50 text-sm font-medium"
+						type="submit">
+							Save
+						</button>
+						:
+						<button
 						className="py-2 px-4 flex rounded-md no-underline bg-mainButton hover:bg-mainButtonHover text-sm font-medium"
-					>
-						Save
-					</button>
+						type="submit">
+							Save
+						</button>
+					}
+					
 				</div>
 			</form>
 		</div>
