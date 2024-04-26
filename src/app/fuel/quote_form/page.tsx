@@ -29,7 +29,8 @@ export default function Page() {
 	  try {
 		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile?user_id=${auth?.userId}`);
 		const jsonData = await response.json();	
-		if (jsonData.length != 0) {
+		console.log(jsonData)
+		if (jsonData.data[0].address !== "") {
 			const addy = `${jsonData.data[0].address} ${jsonData.data[0].address_two} ${jsonData.data[0].city}, ${jsonData.data[0].state} ${jsonData.data[0].zip_code}`
 			setAddress(addy)
 			setInterstate(jsonData.data[0].state !== "Texas")
