@@ -89,7 +89,7 @@ export default function Page() {
 									Delivery Address
 								</label>
 								<div className="mt-2 max-w-3xl">
-									{address}
+									{address.length <= 1 ? address : "Address not found"}
 								</div>
 							</div>
 
