@@ -45,7 +45,7 @@ export default function Page() {
 			});
 
 			if (!res.ok) {
-				toast.error("Invalid credentials.");
+				toast.error("Invalid credentials, please try again.");
 				return;
 			}
 

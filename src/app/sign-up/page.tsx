@@ -50,7 +50,8 @@ export default function Page() {
 			});
 
 			if (!res.ok) {
-				toast.error("Invalid credentials.");
+				const errData = await res.json();
+				toast.error(errData.error.message);
 				return;
 			}
 
