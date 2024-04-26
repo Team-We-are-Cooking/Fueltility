@@ -27,7 +27,7 @@ export default function Page() {
 		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile?user_id=${auth?.userId}`);
 		const jsonData = await response.json();	
 		if (jsonData.length != 0) {
-			const addy = `${jsonData.data[0].address} ${jsonData.data[0].address_two} ${jsonData.data[0].city} ${jsonData.data[0].city}, ${jsonData.data[0].state}`
+			const addy = `${jsonData.data[0].address} ${jsonData.data[0].address_two} ${jsonData.data[0].city}, ${jsonData.data[0].state} ${jsonData.data[0].zip_code}`
 			setAddress(addy)
 		}
 
